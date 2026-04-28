@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathilde — Reise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:     #0d0b12;
+      --accent: #c4a882;
+      --text:   #f0ebe2;
+      --muted:  #a89a8c;
+      --iw:     500px;
+      --ih:     240px;
+      --gap:    18px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.038;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Radial glow behind text */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 28%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(196, 168, 130, 0.07) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── TEXT CONTENT ── */
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5rem 2rem 3.5rem;
+      max-width: 580px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Ornament */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      margin-bottom: 2.4rem;
+      opacity: 0;
+      animation: rise 1s ease 0.2s forwards;
+    }
+    .ornament-line {
+      width: 36px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(196, 168, 130, 0.42));
+    }
+    .ornament-line:last-child {
+      background: linear-gradient(to left, transparent, rgba(196, 168, 130, 0.42));
+    }
+    .ornament-gem {
+      width: 5px;
+      height: 5px;
+      border: 1px solid rgba(196, 168, 130, 0.5);
+      transform: rotate(45deg);
+    }
+
+    /* Greeting */
+    .greeting {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      color: var(--accent);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.3rem;
+      min-height: 1.4em;
+    }
+
+    /* Body text */
+    .body-text {
+      font-weight: 300;
+      font-size: clamp(0.88rem, 1.55vw, 1.04rem);
+      line-height: 1.9;
+      color: var(--muted);
+      letter-spacing: 0.012em;
+      min-height: 3.8em;
+    }
+
+    /* Cursor */
+    .cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: 0.82em;
+      background: var(--accent);
+      margin-left: 1px;
+      vertical-align: middle;
+      opacity: 0.7;
+      animation: blink 0.68s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 0; }
+    }
+
+    /* Choices */
+    .choices {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 3rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .choices.visible { opacity: 1; transform: translateY(0); }
+
+    .btn {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(196, 168, 130, 0.22);
+      border-radius: 8px;
+      font-size: 2.05rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition:
+        transform  0.26s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.26s ease,
+        background 0.22s ease,
+        border-color 0.22s ease;
+    }
+    .btn:hover {
+      transform: translateY(-5px) scale(1.03);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(196, 168, 130, 0.5);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        0 4px 20px rgba(196, 168, 130, 0.1);
+    }
+    .btn:active { transform: translateY(-2px) scale(1.01); }
+
+    /* ── STRIPS ── */
+    .strips-outer {
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Top fade */
+    .strips-outer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Bottom fade */
+    .strips-outer::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: linear-gradient(to top, var(--bg), transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .strips-inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      /* Left/right edge fade */
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+      mask-image:         linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+    }
+
+    .strip { overflow: hidden; }
+
+    .track {
+      display: flex;
+      gap: var(--gap);
+      width: max-content;
+      will-change: transform;
+    }
+    .track.go-left  { animation: go-left  40s linear infinite; }
+    .track.go-right { animation: go-right 44s linear infinite; }
+
+    @keyframes go-left  {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes go-right {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+
+    .slide {
+      width: var(--iw);
+      height: var(--ih);
+      flex-shrink: 0;
+      border-radius: 5px;
+      background-color: #1a1622;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      :root { --iw: 280px; --ih: 187px; --gap: 12px; }
+      .btn  { width: 70px; height: 70px; font-size: 1.8rem; }
+      .choices { gap: 1.1rem; margin-top: 2.2rem; }
+      .content { padding-bottom: 2.5rem; }
+    }
+    @media (max-height: 720px) {
+      :root { --ih: 180px; }
+      .ornament { margin-bottom: 1.6rem; }
+      .choices  { margin-top: 2rem; }
+      .content  { padding-top: 3.5rem; padding-bottom: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+
+    <!-- Typewriter content -->
+    <div class="content">
+      <div class="ornament">
+        <div class="ornament-line"></div>
+        <div class="ornament-gem"></div>
+        <div class="ornament-line"></div>
+      </div>
+      <p class="greeting"  id="tw-g"></p>
+      <p class="body-text" id="tw-b"></p>
+      <div class="choices" id="choices">
+        <button class="btn" aria-label="Strand">🏖️</button>
+        <button class="btn" aria-label="By">🏙️</button>
+      </div>
+    </div>
+
+    <!-- Scrolling city strips -->
+    <div class="strips-outer">
+      <div class="strips-inner">
+        <div class="strip"><div class="track go-left"  id="track-top"></div></div>
+        <div class="strip"><div class="track go-right" id="track-bot"></div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    // Build strips
+    const SEEDS_TOP = ['tokyo', 'paris', 'newyork', 'london', 'dubai', 'barcelona', 'singapore', 'rome'];
+    const SEEDS_BOT = ['santorini', 'bali', 'istanbul', 'prague', 'kyoto', 'lisbon', 'maldives', 'rio'];
+
+    function buildStrip(trackEl, seeds) {
+      const all = [...seeds, ...seeds];
+      all.forEach(seed => {
+        const d = document.createElement('div');
+        d.className = 'slide';
+        d.style.backgroundImage = `url('https://picsum.photos/seed/${seed}/820/546')`;
+        trackEl.appendChild(d);
+      });
+    }
+
+    buildStrip(document.getElementById('track-top'), SEEDS_TOP);
+    buildStrip(document.getElementById('track-bot'), SEEDS_BOT);
+
+    // Typewriter
+    const GREETING = 'Hei Mathilde,';
+    const BODY     = 'før vi bestemmer hvilken reise som passer best for deg, vil vi gjerne finne ut hva du prioriterer mest.';
+    const sleep    = ms => new Promise(r => setTimeout(r, ms));
+
+    async function type(el, text, base) {
+      el.innerHTML = '';
+      const cur = Object.assign(document.createElement('span'), { className: 'cursor' });
+      el.appendChild(cur);
+      for (let i = 0; i < text.length; i++) {
+        cur.remove();
+        el.appendChild(document.createTextNode(text[i]));
+        el.appendChild(cur);
+        const ch = text[i];
+        const ms = (ch === ',' || ch === '.') ? base * 5.5
+                 : ch === ' '                 ? base * 0.35
+                 :                              base + Math.random() * 18;
+        await sleep(ms);
+      }
+      cur.remove();
+    }
+
+    async function run() {
+      await sleep(700);
+      await type(document.getElementById('tw-g'), GREETING, 68);
+      await sleep(480);
+      await type(document.getElementById('tw-b'), BODY, 38);
+      await sleep(220);
+      document.getElementById('choices').classList.add('visible');
+    }
+
+    run();
+  </script>
+
+</body>
+</html>
