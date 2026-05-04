@@ -15,6 +15,13 @@
       --gold-soft:   rgba(240, 209, 153, 0.92);
       --light-text:  #f7f1e2;
       --light-body:  #e8e1ce;
+
+      /* Intro page palette */
+      --intro-bg:     #fbf6ec;
+      --intro-deep:   #2c4470;
+      --intro-mid:    #4a6a9a;
+      --intro-soft:   #5e7ba5;
+      --heart-blue:   #4a90e2;
     }
 
     html, body {
@@ -24,10 +31,9 @@
 
     body {
       font-family: 'Jost', sans-serif;
-      background-color: #1a120c;
+      background-color: var(--intro-bg);
       color: var(--light-text);
-      /* Smooth body color fade between scenes */
-      transition: background-color 1.7s cubic-bezier(0.65, 0, 0.35, 1);
+      transition: background-color 2.2s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
     /* Paper grain */
@@ -53,7 +59,7 @@
     }
 
     .scenes {
-      transition: transform 1.7s cubic-bezier(0.65, 0, 0.35, 1);
+      transition: transform 2.2s cubic-bezier(0.32, 0.72, 0, 1);
       will-change: transform;
     }
 
@@ -63,35 +69,132 @@
       overflow: hidden;
       display: flex;
       align-items: center;
-      padding: 4rem 5rem;
-      background: transparent; /* let body bg show through for smooth fades */
+      justify-content: center;
+      padding: 4rem 2rem;
+      background: transparent;
     }
 
-    .scene.center { justify-content: center; }
-    .scene.left   { justify-content: flex-start; }
-    .scene.right  { justify-content: flex-end; }
+    /* Destination scenes — TITLE on far left, boxes stacked to its right */
+    .scene.has-stats {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 4rem 3.5rem 3rem 3.5rem;
+      gap: 2.5rem;
+    }
+
+    .left-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+      z-index: 3;
+      padding-top: 1.5rem;
+    }
+
+    .country-display {
+      align-self: flex-start;
+      text-align: left;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      font-style: normal;
+      font-size: clamp(3rem, 6.5vw, 5.6rem);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.96);
+      letter-spacing: 0.045em;
+      line-height: 0.95;
+      text-shadow:
+        0 6px 36px rgba(0, 0, 0, 0.55),
+        0 2px 12px rgba(0, 0, 0, 0.35);
+      z-index: 3;
+      position: relative;
+      flex-shrink: 0;
+      padding-top: 1.5rem;
+      white-space: nowrap;
+
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 1.5s ease 0.4s, transform 1.5s ease 0.4s;
+    }
+    .country-display.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .country-flag {
+      display: inline-block;
+      margin-left: 0.18em;
+      font-size: 0.82em;
+      vertical-align: -0.04em;
+      line-height: 1;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+    }
 
     /* ─────────────────────────────
-       BACKGROUND PHOTO + AI/PAINTERLY TREATMENT
+       INTRO SCENE (light, blue hearts)
+    ───────────────────────────── */
+    .intro-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(180, 210, 245, 0.35), transparent 70%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(255, 230, 200, 0.4), transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .heart-float {
+      position: absolute;
+      will-change: transform;
+      animation: heart-bob 6s ease-in-out infinite;
+      filter: drop-shadow(0 4px 12px rgba(74, 144, 226, 0.18));
+    }
+    @keyframes heart-bob {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50%      { transform: translateY(-14px) rotate(4deg); }
+    }
+
+    /* Heart positions */
+    .h1 { top:  9%; left: 11%; width: 32px; animation-delay: 0s;   opacity: 0.55; }
+    .h2 { top: 18%; right: 14%; width: 24px; animation-delay: 1.2s; opacity: 0.45; }
+    .h3 { top: 38%; left:  6%; width: 20px; animation-delay: 2.4s; opacity: 0.4;  }
+    .h4 { top: 32%; right:  8%; width: 28px; animation-delay: 0.6s; opacity: 0.5;  }
+    .h5 { bottom: 22%; left: 13%; width: 26px; animation-delay: 1.8s; opacity: 0.5; }
+    .h6 { bottom: 16%; right: 16%; width: 36px; animation-delay: 0.3s; opacity: 0.55; }
+    .h7 { top: 64%; left: 28%; width: 18px; animation-delay: 3s;   opacity: 0.35; }
+    .h8 { top: 70%; right: 26%; width: 22px; animation-delay: 2.1s; opacity: 0.4;  }
+    .h9 { top: 12%; left: 42%; width: 16px; animation-delay: 1.5s; opacity: 0.32; }
+    .h10{ bottom: 10%; left: 48%; width: 18px; animation-delay: 0.9s; opacity: 0.4; }
+
+    /* ─────────────────────────────
+       BACKGROUND PHOTO + AI TREATMENT
     ───────────────────────────── */
     .bg-wrap {
       position: absolute;
       inset: 0;
       z-index: 0;
       overflow: hidden;
-      /* Top fade — lets body color show through */
       -webkit-mask-image: linear-gradient(to bottom,
         transparent 0%,
-        rgba(0,0,0,0.15) 6%,
-        rgba(0,0,0,0.55) 14%,
-        rgba(0,0,0,0.92) 24%,
-        black 32%, black 100%);
+        rgba(0,0,0,0.05) 4%,
+        rgba(0,0,0,0.3) 12%,
+        rgba(0,0,0,0.7) 22%,
+        rgba(0,0,0,0.95) 32%,
+        black 40%, black 100%);
       mask-image: linear-gradient(to bottom,
         transparent 0%,
-        rgba(0,0,0,0.15) 6%,
-        rgba(0,0,0,0.55) 14%,
-        rgba(0,0,0,0.92) 24%,
-        black 32%, black 100%);
+        rgba(0,0,0,0.05) 4%,
+        rgba(0,0,0,0.3) 12%,
+        rgba(0,0,0,0.7) 22%,
+        rgba(0,0,0,0.95) 32%,
+        black 40%, black 100%);
     }
 
     .bg-photo {
@@ -99,14 +202,9 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      /* AI / painterly filter — punchy, vivid, slightly dreamy */
-      filter:
-        saturate(1.55)
-        contrast(1.14)
-        brightness(0.92);
+      filter: saturate(1.55) contrast(1.14) brightness(0.92);
     }
 
-    /* Painterly color wash — unifies palette, adds dreamy AI feel */
     .bg-wrap::before {
       content: '';
       position: absolute;
@@ -120,7 +218,6 @@
       z-index: 1;
     }
 
-    /* Vignette — strengthens text readability and cinematic feel */
     .bg-wrap::after {
       content: '';
       position: absolute;
@@ -132,7 +229,7 @@
     }
 
     /* ─────────────────────────────
-       LIQUID GLASS CARD — readable
+       LIQUID GLASS — dark variant (default for photo scenes)
     ───────────────────────────── */
     .glass {
       position: relative;
@@ -141,7 +238,6 @@
       padding: 2.6rem 2.8rem 2.4rem;
       border-radius: 26px;
 
-      /* Darker tint + brightness reduction in backdrop = always readable */
       background: linear-gradient(135deg,
         rgba(18, 18, 30, 0.42) 0%,
         rgba(18, 18, 30, 0.28) 100%);
@@ -157,24 +253,18 @@
 
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 1.4s ease 0.3s, transform 1.4s ease 0.3s;
+      transition: opacity 1.5s ease 0.4s, transform 1.5s ease 0.4s;
     }
     .glass.visible { opacity: 1; transform: translateY(0); }
 
-    /* Top reflective edge */
     .glass::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 14%;
-      right: 14%;
+      top: 0; left: 14%; right: 14%;
       height: 1px;
       background: linear-gradient(to right,
-        transparent,
-        rgba(255, 255, 255, 0.6),
-        transparent);
+        transparent, rgba(255, 255, 255, 0.6), transparent);
     }
-    /* Soft inner glow */
     .glass::after {
       content: '';
       position: absolute;
@@ -182,13 +272,471 @@
       height: 50%;
       border-radius: 0 0 26px 26px;
       background: linear-gradient(to top,
-        rgba(255, 255, 255, 0.04),
-        transparent);
+        rgba(255, 255, 255, 0.04), transparent);
       pointer-events: none;
     }
 
+    /* Stats glass — VERTICAL list (label · value rows) */
+    .glass.stats {
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      transition: opacity 1.5s ease 0.7s, transform 1.5s ease 0.7s;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--light-body);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      font-weight: 300;
+    }
+    .stat-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.78rem;
+      color: rgba(240, 209, 153, 0.78);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .stat-icon {
+      font-size: 0.95rem;
+      opacity: 0.95;
+      line-height: 1;
+      filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+    }
+    .stat-value {
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      color: var(--light-text);
+      font-weight: 400;
+    }
+
     /* ─────────────────────────────
-       TYPOGRAPHY (with subtle shadows for crispness)
+       ALTERNATIVES SCENE ("Noe helt annet?")
+       — 3 columns, each 1/3 of screen with own bg photo
+    ───────────────────────────── */
+    .scene-alternatives {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+      gap: 0;
+    }
+
+    /* "Noe helt annet?" — pill-shaped horizontal banner centered in middle */
+    .alt-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translateY(20px);
+      z-index: 12;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      color: rgba(255, 255, 255, 0.98);
+      text-align: center;
+      letter-spacing: 0.005em;
+      line-height: 1;
+      white-space: nowrap;
+      padding: 1.1rem 3.6rem;
+
+      background: linear-gradient(135deg,
+        rgba(18, 18, 30, 0.5) 0%,
+        rgba(18, 18, 30, 0.3) 100%);
+      backdrop-filter: blur(30px) saturate(170%);
+      -webkit-backdrop-filter: blur(30px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      text-shadow: 0 3px 18px rgba(0, 0, 0, 0.55);
+
+      opacity: 0;
+      transition: opacity 1.4s ease 0.2s, transform 1.4s ease 0.2s;
+    }
+    .alt-title.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) translateY(0);
+    }
+    .alt-title::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 18%; right: 18%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.5), transparent);
+    }
+
+    .alt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    .alt-section {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      transition: opacity 1.4s ease var(--alt-delay, 0s),
+                  transform 1.4s ease var(--alt-delay, 0s);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .alt-section.visible { opacity: 1; transform: translateY(0); }
+    .alt-section:nth-child(1) { --alt-delay: 0.35s; }
+    .alt-section:nth-child(2) { --alt-delay: 0.55s; }
+    .alt-section:nth-child(3) { --alt-delay: 0.75s; }
+
+    .alt-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .alt-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.5) contrast(1.14) brightness(0.7);
+      transition: filter 0.6s ease, transform 0.8s ease;
+    }
+    .alt-section:hover .alt-bg img {
+      filter: saturate(1.55) contrast(1.16) brightness(0.85);
+      transform: scale(1.04);
+    }
+    .alt-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.6) 100%),
+        radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%);
+      pointer-events: none;
+    }
+
+    /* Subtle dividers between columns */
+    .alt-section + .alt-section::before {
+      content: '';
+      position: absolute;
+      top: 8%; bottom: 8%; left: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+      z-index: 5;
+    }
+
+    /* Big country name overlay (replaces the small glass card) */
+    .alt-name {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      margin: 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      color: rgba(255, 255, 255, 0.97);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-align: center;
+      text-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.7),
+        0 2px 10px rgba(0, 0, 0, 0.5);
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+    }
+    .alt-section:hover .alt-name {
+      color: var(--gold);
+      text-shadow:
+        0 4px 28px rgba(0, 0, 0, 0.7),
+        0 0 22px rgba(240, 209, 153, 0.35);
+    }
+
+    @media (max-width: 760px) {
+      .alt-grid { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr; }
+      .alt-title { font-size: clamp(1.6rem, 6vw, 2.4rem); padding: 0.8rem 1.8rem; }
+      .alt-name { font-size: clamp(1.4rem, 5vw, 2rem); top: 25%; }
+    }
+
+    /* ─────────────────────────────
+       MEMORY PHOTO LOOP (summary scene)
+    ───────────────────────────── */
+    .memory-loop {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 0;
+      right: 0;
+      height: 420px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    }
+    .memory-strip {
+      display: flex;
+      gap: 1.2rem;
+      width: max-content;
+      height: 100%;
+      align-items: center;
+      animation: memory-scroll 90s linear infinite;
+    }
+    @keyframes memory-scroll {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+    .memory-photo {
+      width: 280px;
+      height: 380px;
+      flex-shrink: 0;
+      background-color: #1a1622;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.55),
+        0 6px 16px rgba(0, 0, 0, 0.35);
+      display: block;
+    }
+    @media (max-width: 760px) {
+      .memory-loop { height: 280px; }
+      .memory-photo { width: 200px; height: 260px; }
+    }
+
+    /* ─────────────────────────────
+       SUMMARY SCENE (final page — light, hearts, photo loop)
+    ───────────────────────────── */
+    .scene-summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary-glass-final {
+      max-width: 520px;
+      width: 100%;
+      min-height: 280px;
+      padding: 2.4rem 2.6rem 2.2rem;
+      position: relative;
+      z-index: 3;
+    }
+    .summary-glass::-webkit-scrollbar { width: 4px; }
+    .summary-glass::-webkit-scrollbar-track { background: transparent; }
+    .summary-glass::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 2px;
+    }
+    .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-dest {
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .summary-dest:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .summary-dest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      font-size: 0.85rem;
+      padding: 0.18rem 0;
+      color: var(--light-body);
+    }
+    .summary-row .key {
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+    .summary-row .val {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .send-btn {
+      width: 100%;
+      padding: 0.95rem 1.5rem;
+      background: linear-gradient(135deg,
+        rgba(240, 209, 153, 0.22) 0%,
+        rgba(240, 209, 153, 0.10) 100%);
+      border: 1px solid rgba(240, 209, 153, 0.42);
+      border-radius: 14px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .send-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg,
+        rgba(240, 209, 153, 0.32) 0%,
+        rgba(240, 209, 153, 0.16) 100%);
+      box-shadow:
+        0 10px 28px rgba(240, 209, 153, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+    .send-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .send-status {
+      margin-top: 0.9rem;
+      text-align: center;
+      font-size: 0.84rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      color: var(--light-body);
+      min-height: 1.2em;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .send-status.show    { opacity: 1; }
+    .send-status.success { color: #a8e6c0; }
+    .send-status.error   { color: #f4a8a8; }
+
+    /* Sliders glass — third box with draggable bars */
+    .glass.sliders {
+      padding: 1.2rem 1.5rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+      transition: opacity 1.5s ease 1s, transform 1.5s ease 1s;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .slider-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .slider-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--light-body);
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+    .slider-value {
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      color: var(--gold);
+      min-width: 1.6em;
+      text-align: right;
+      letter-spacing: 0.02em;
+    }
+    .slider-input {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right,
+        var(--gold) 0%,
+        var(--gold) var(--fill, 50%),
+        rgba(255, 255, 255, 0.15) var(--fill, 50%),
+        rgba(255, 255, 255, 0.15) 100%);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      cursor: grab;
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.4),
+        0 0 14px rgba(240, 209, 153, 0.45);
+      transition: transform 0.2s ease;
+    }
+    .slider-input::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.2);
+    }
+    .slider-input::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      cursor: grab;
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.4),
+        0 0 14px rgba(240, 209, 153, 0.45);
+    }
+    .slider-input::-moz-range-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.2);
+    }
+
+    /* Light glass (for intro page) */
+    .glass.light {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.65) 0%,
+        rgba(225, 235, 250, 0.45) 100%);
+      backdrop-filter: blur(24px) saturate(150%);
+      -webkit-backdrop-filter: blur(24px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 22px 70px rgba(80, 110, 170, 0.16),
+        0 6px 18px rgba(80, 110, 170, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .glass.light::before {
+      background: linear-gradient(to right,
+        transparent, rgba(255, 255, 255, 0.95), transparent);
+    }
+
+    /* ─────────────────────────────
+       TYPOGRAPHY
     ───────────────────────────── */
     .label {
       font-family: 'Cormorant Garamond', serif;
@@ -239,6 +787,14 @@
       margin: 1.4rem 0;
     }
 
+    /* Light variants for intro */
+    .glass.light .label   { color: var(--intro-soft); text-shadow: none; opacity: 0.85; }
+    .glass.light .title   { color: var(--intro-deep); text-shadow: 0 2px 14px rgba(80, 110, 170, 0.2); }
+    .glass.light .message { color: var(--intro-mid);  text-shadow: none; }
+    .glass.light .divider {
+      background: linear-gradient(to right, transparent, rgba(74, 144, 226, 0.5), transparent);
+    }
+
     /* ─────────────────────────────
        PAGINATION
     ───────────────────────────── */
@@ -258,19 +814,24 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.28);
+      background: rgba(140, 140, 160, 0.4);
       cursor: pointer;
-      transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1),
+                  background-color 2.2s cubic-bezier(0.32, 0.72, 0, 1);
+      border: 1px solid rgba(140, 140, 160, 0.2);
     }
-    .dot:hover { background: rgba(255, 255, 255, 0.55); }
+    .dot:hover { background: rgba(140, 140, 160, 0.7); }
     .dot.active {
       background: var(--gold);
       transform: scale(1.4);
       box-shadow: 0 0 14px rgba(240, 209, 153, 0.55);
     }
+    body.intro-active .dot { background: rgba(74, 144, 226, 0.35); border-color: rgba(74, 144, 226, 0.2); }
+    body.intro-active .dot.active {
+      background: var(--heart-blue);
+      box-shadow: 0 0 14px rgba(74, 144, 226, 0.5);
+    }
 
-    /* Scene counter */
     .counter {
       position: fixed;
       top: 28px;
@@ -284,10 +845,12 @@
       opacity: 0;
       animation: fade-in 1.2s ease 1.8s forwards;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      transition: color 2.2s cubic-bezier(0.32, 0.72, 0, 1);
     }
-    .counter span { color: var(--gold); margin-right: 0.5em; }
+    .counter span { color: var(--gold); margin-right: 0.5em; transition: color 2.2s cubic-bezier(0.32, 0.72, 0, 1); }
+    body.intro-active .counter { color: rgba(74, 100, 150, 0.55); text-shadow: none; }
+    body.intro-active .counter span { color: var(--heart-blue); }
 
-    /* Scroll hint */
     .scroll-hint {
       position: fixed;
       bottom: 26px;
@@ -310,10 +873,17 @@
       font-size: 0.75rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
+      color: rgba(74, 100, 150, 0.6);
+      transition: color 2.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    body:not(.intro-active) .scroll-hint-label {
       color: rgba(255, 255, 255, 0.55);
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     }
     .scroll-hint svg { animation: bob 2.4s ease-in-out infinite; }
+    .scroll-hint svg path { stroke: rgba(74, 100, 150, 0.6); transition: stroke 2.2s cubic-bezier(0.32, 0.72, 0, 1); }
+    body:not(.intro-active) .scroll-hint svg path { stroke: rgba(255, 255, 255, 0.55); }
+
     @keyframes bob {
       0%, 100% { transform: translateY(0); }
       50%      { transform: translateY(4px); }
@@ -328,8 +898,24 @@
     ───────────────────────────── */
     @media (max-width: 880px) {
       .scene { padding: 2rem 1.6rem; }
-      .scene.left, .scene.right { justify-content: center; }
-      .glass { padding: 2rem 1.8rem 1.8rem; max-width: 92%; }
+      .scene.has-stats {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1.6rem 2rem;
+        gap: 1.2rem;
+      }
+      .left-stack { padding-top: 0; max-width: 92%; }
+      .country-display {
+        align-self: center;
+        text-align: center;
+        font-size: clamp(2.6rem, 12vw, 4.5rem);
+        padding-top: 0;
+        white-space: normal;
+      }
+      .glass { padding: 2rem 1.8rem 1.8rem; max-width: 100%; }
+      .glass.stats { padding: 0.9rem 1.2rem; }
+      .glass.sliders { padding: 1rem 1.2rem 1.2rem; }
       .pagination { right: 14px; gap: 11px; }
       .counter { top: 18px; right: 18px; font-size: 0.75rem; }
     }
@@ -339,21 +925,31 @@
     }
   </style>
 </head>
-<body>
+<body class="intro-active">
 
   <div class="viewport">
 
     <div class="scenes" id="scenes">
 
-      <!-- ═══════ 1 — Oslo, Slottet ═══════ -->
-      <section class="scene center" data-bg="#1a120c">
-        <div class="bg-wrap">
-          <img class="bg-photo" alt="" referrerpolicy="no-referrer"
-            src="https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?w=1920&q=80"
-            data-fallback="oslo,royal,palace,norway" />
+      <!-- ═══════ 1 — Intro (light, blue hearts) ═══════ -->
+      <section class="scene" data-bg="#fbf6ec" data-intro="true">
+        <div class="intro-glow"></div>
+
+        <div class="hearts" aria-hidden="true">
+          <svg class="heart-float h1"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h2"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h3"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h4"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#2c5b9b"/></svg>
+          <svg class="heart-float h5"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h6"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h7"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#a5d4f5"/></svg>
+          <svg class="heart-float h8"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h9"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#a5d4f5"/></svg>
+          <svg class="heart-float h10" viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
         </div>
-        <div class="glass" data-fade>
-          <div class="label">For deg, Mathilde</div>
+
+        <div class="glass light" data-fade>
+          <div class="label">For deg, Mathilde 💙</div>
           <h1 class="title">Hei Mathilde<span class="heart">💙</span></h1>
           <div class="divider"></div>
           <div class="message">
@@ -365,74 +961,221 @@
       </section>
 
       <!-- ═══════ 2 — Paris, Eiffeltårnet ═══════ -->
-      <section class="scene left" data-bg="#0d0e22">
+      <section class="scene has-stats" data-bg="#0d0e22">
         <div class="bg-wrap">
           <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+            style="object-position: 30% center;"
             src="https://images.unsplash.com/photo-1431274172761-fca41d930114?w=1920&q=80"
             data-fallback="paris,eiffel,tower,night" />
         </div>
-        <div class="glass" data-fade>
-          <div class="label">Frankrike · 01</div>
-          <h2 class="title">Paris venter.</h2>
-          <div class="divider"></div>
-          <div class="message">
-            <p>En by full av lys, kunst og romantikk — der vi vandrer langs Seinen, deler kaffe på små kafeer, og ser solen gå ned bak Eiffeltårnet.</p>
-            <p><em>(plassholder-tekst — mer kommer)</em></p>
+        <div class="left-stack">
+          <div class="glass" data-fade>
+            <div class="label">Frankrike · 01</div>
+            <h2 class="title">Paris venter.</h2>
+            <div class="divider"></div>
+            <div class="message"><p>sweet text</p></div>
+          </div>
+          <div class="glass stats" data-fade>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🌡</span> Temp</span><span class="stat-value">14°C</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">☁</span> Vær</span><span class="stat-value">Skyer</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🕐</span> Tidssone</span><span class="stat-value">GMT+1</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">✈</span> Fra Oslo</span><span class="stat-value">2t 20m</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">💶</span> Valuta</span><span class="stat-value">EUR</span></div>
+          </div>
+          <div class="glass sliders" data-fade>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Hvor lyst har du å dra hit?</span><span class="slider-value">7</span></div>
+              <input type="range" min="1" max="10" value="7" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Romantikk-faktor</span><span class="slider-value">9</span></div>
+              <input type="range" min="1" max="10" value="9" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Mat &amp; vin</span><span class="slider-value">8</span></div>
+              <input type="range" min="1" max="10" value="8" class="slider-input" />
+            </div>
           </div>
         </div>
+        <div class="country-display" data-fade>France</div>
       </section>
 
       <!-- ═══════ 3 — Roma, Colosseum ═══════ -->
-      <section class="scene right" data-bg="#1c130a">
+      <section class="scene has-stats" data-bg="#1c130a">
         <div class="bg-wrap">
           <img class="bg-photo" alt="" referrerpolicy="no-referrer"
-            src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1920&q=80"
-            data-fallback="rome,colosseum,italy" />
+            style="object-position: 25% bottom;"
+            src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=1920&q=80"
+            data-fallback="rome,colosseum,italy,sunset" />
         </div>
-        <div class="glass" data-fade>
-          <div class="label">Italia · 02</div>
-          <h2 class="title">Roma — den evige byen.</h2>
-          <div class="divider"></div>
-          <div class="message">
-            <p>To tusen år av historie under føttene våre. Vi vandrer rundt Colosseum, kaster mynter i Trevifontenen, og deler en pasta i en bakgate i Trastevere.</p>
-            <p><em>(plassholder-tekst — mer kommer)</em></p>
+        <div class="left-stack">
+          <div class="glass" data-fade>
+            <div class="label">Italia · 02</div>
+            <h2 class="title">Roma — den evige byen.</h2>
+            <div class="divider"></div>
+            <div class="message"><p>sweet text</p></div>
+          </div>
+          <div class="glass stats" data-fade>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🌡</span> Temp</span><span class="stat-value">19°C</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">☀</span> Vær</span><span class="stat-value">Sol</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🕐</span> Tidssone</span><span class="stat-value">GMT+1</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">✈</span> Fra Oslo</span><span class="stat-value">2t 50m</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">💶</span> Valuta</span><span class="stat-value">EUR</span></div>
+          </div>
+          <div class="glass sliders" data-fade>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Hvor lyst har du å dra hit?</span><span class="slider-value">8</span></div>
+              <input type="range" min="1" max="10" value="8" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Historie-interesse</span><span class="slider-value">9</span></div>
+              <input type="range" min="1" max="10" value="9" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Gelato-glede</span><span class="slider-value">10</span></div>
+              <input type="range" min="1" max="10" value="10" class="slider-input" />
+            </div>
           </div>
         </div>
+        <div class="country-display" data-fade>Italy</div>
       </section>
 
       <!-- ═══════ 4 — Kina, Den kinesiske mur ═══════ -->
-      <section class="scene left" data-bg="#0e1418">
+      <section class="scene has-stats" data-bg="#0e1418">
         <div class="bg-wrap">
           <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+            style="object-position: 30% center;"
             src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80"
             data-fallback="great,wall,china" />
         </div>
-        <div class="glass" data-fade>
-          <div class="label">Kina · 03</div>
-          <h2 class="title">Den store mur.</h2>
-          <div class="divider"></div>
-          <div class="message">
-            <p>Vi går der keisere har gått, mellom skyer og fjelltopper, langs et byggverk så enormt at det kan ses fra verdensrommet — og fortsatt, kun en av oss to.</p>
-            <p><em>(plassholder-tekst — mer kommer)</em></p>
+        <div class="left-stack">
+          <div class="glass" data-fade>
+            <div class="label">Kina · 03</div>
+            <h2 class="title">Den store mur.</h2>
+            <div class="divider"></div>
+            <div class="message"><p>sweet text</p></div>
+          </div>
+          <div class="glass stats" data-fade>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🌡</span> Temp</span><span class="stat-value">12°C</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🌫</span> Vær</span><span class="stat-value">Tåke</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🕐</span> Tidssone</span><span class="stat-value">GMT+8</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">✈</span> Fra Oslo</span><span class="stat-value">9t 30m</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">💴</span> Valuta</span><span class="stat-value">CNY</span></div>
+          </div>
+          <div class="glass sliders" data-fade>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Hvor lyst har du å dra hit?</span><span class="slider-value">6</span></div>
+              <input type="range" min="1" max="10" value="6" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Eventyr-nivå</span><span class="slider-value">9</span></div>
+              <input type="range" min="1" max="10" value="9" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Kulturskifte</span><span class="slider-value">10</span></div>
+              <input type="range" min="1" max="10" value="10" class="slider-input" />
+            </div>
           </div>
         </div>
+        <div class="country-display" data-fade>China</div>
       </section>
 
       <!-- ═══════ 5 — Tokyo, Mount Fuji ═══════ -->
-      <section class="scene right" data-bg="#180e1a">
+      <section class="scene has-stats" data-bg="#180e1a">
         <div class="bg-wrap">
           <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+            style="object-position: 30% center;"
             src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=1920&q=80"
             data-fallback="mount,fuji,japan,cherry,blossom" />
         </div>
-        <div class="glass" data-fade>
-          <div class="label">Japan · 04</div>
-          <h2 class="title">Tokyo &amp; Fuji.</h2>
-          <div class="divider"></div>
-          <div class="message">
-            <p>Kirsebærblomster i Ueno-parken, neonlys i Shibuya, og morgenlyset over Fuji-fjellet — gammel kultur og fremtidens by, alt på én reise.</p>
-            <p><em>(plassholder-tekst — mer kommer)</em></p>
+        <div class="left-stack">
+          <div class="glass" data-fade>
+            <div class="label">Japan · 04</div>
+            <h2 class="title">Tokyo &amp; Fuji.</h2>
+            <div class="divider"></div>
+            <div class="message"><p>sweet text</p></div>
           </div>
+          <div class="glass stats" data-fade>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🌡</span> Temp</span><span class="stat-value">16°C</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">☀</span> Vær</span><span class="stat-value">Sol</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">🕐</span> Tidssone</span><span class="stat-value">GMT+9</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">✈</span> Fra Oslo</span><span class="stat-value">11t 00m</span></div>
+            <div class="stat"><span class="stat-label"><span class="stat-icon">💴</span> Valuta</span><span class="stat-value">JPY</span></div>
+          </div>
+          <div class="glass sliders" data-fade>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Hvor lyst har du å dra hit?</span><span class="slider-value">8</span></div>
+              <input type="range" min="1" max="10" value="8" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Sushi-glede</span><span class="slider-value">9</span></div>
+              <input type="range" min="1" max="10" value="9" class="slider-input" />
+            </div>
+            <div class="slider-row">
+              <div class="slider-head"><span class="slider-label">Templer &amp; ro</span><span class="slider-value">7</span></div>
+              <input type="range" min="1" max="10" value="7" class="slider-input" />
+            </div>
+          </div>
+        </div>
+        <div class="country-display" data-fade>Japan</div>
+      </section>
+
+      <!-- ═══════ 6 — Noe helt annet? ═══════ -->
+      <section class="scene scene-alternatives" data-bg="#0e0c1c">
+        <div class="alt-grid">
+          <div class="alt-section" data-fade>
+            <div class="alt-bg">
+              <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+                src="https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/thailand-beach/1200/900';" />
+            </div>
+            <h3 class="alt-name">Thailand</h3>
+          </div>
+
+          <div class="alt-section" data-fade>
+            <div class="alt-bg">
+              <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+                src="https://images.unsplash.com/photo-1565967511849-76a60a516170?w=1200&q=80"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/north-korea-pyongyang/1200/900';" />
+            </div>
+            <h3 class="alt-name">Nord-Korea</h3>
+          </div>
+
+          <div class="alt-section" data-fade>
+            <div class="alt-bg">
+              <img class="bg-photo" alt="" referrerpolicy="no-referrer"
+                src="https://images.unsplash.com/photo-1565847002608-9be3651ce0d0?w=1200&q=80"
+                onerror="this.onerror=null; this.src='https://picsum.photos/seed/stavanger-preikestolen/1200/900';" />
+            </div>
+            <h3 class="alt-name">Stavanger</h3>
+          </div>
+        </div>
+        <h2 class="alt-title" data-fade>Noe helt annet?</h2>
+      </section>
+
+      <!-- ═══════ 7 — Avslutning ═══════ -->
+      <section class="scene scene-summary" data-bg="#fbf6ec" data-intro="true">
+        <div class="intro-glow"></div>
+
+        <div class="hearts" aria-hidden="true">
+          <svg class="heart-float h1"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h2"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h3"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h4"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#2c5b9b"/></svg>
+          <svg class="heart-float h5"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h6"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+          <svg class="heart-float h7"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#a5d4f5"/></svg>
+          <svg class="heart-float h8"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#6bb6e8"/></svg>
+          <svg class="heart-float h9"  viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#a5d4f5"/></svg>
+          <svg class="heart-float h10" viewBox="0 0 24 22"><path d="M12 22 L11 21 C5.4 16.4 2 13.4 2 9.5 C2 6.4 4.4 4 7.5 4 C9.2 4 10.9 4.8 12 6 C13.1 4.8 14.8 4 16.5 4 C19.6 4 22 6.4 22 9.5 C22 13.4 18.6 16.4 13 21 L12 22 Z" fill="#4a90e2"/></svg>
+        </div>
+
+        <div class="glass light summary-glass-final" data-fade>
+          <!-- Tekst kommer snart — placeholder -->
+        </div>
+
+        <div class="memory-loop">
+          <div class="memory-strip" id="memory-strip"></div>
         </div>
       </section>
 
@@ -445,16 +1188,18 @@
       <div class="dot" data-index="2"></div>
       <div class="dot" data-index="3"></div>
       <div class="dot" data-index="4"></div>
+      <div class="dot" data-index="5"></div>
+      <div class="dot" data-index="6"></div>
     </div>
 
     <!-- Scene counter -->
-    <div class="counter" id="counter"><span>01</span>/ 05</div>
+    <div class="counter" id="counter"><span>01</span>/ 07</div>
 
     <!-- Scroll hint -->
     <div class="scroll-hint" id="scroll-hint">
       <span class="scroll-hint-label">scroll</span>
       <svg width="14" height="9" viewBox="0 0 14 9" fill="none">
-        <path d="M1 1 L7 7 L13 1" stroke="rgba(255, 255, 255, 0.55)" stroke-width="1.3"
+        <path d="M1 1 L7 7 L13 1" stroke-width="1.3"
               stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
@@ -474,15 +1219,18 @@
 
     let current      = 0;
     let isAnimating  = false;
-    const SLIDE_MS   = 1700;
+    const SLIDE_MS   = 2200;
 
     function reveal(scene) {
       scene.querySelectorAll('[data-fade]').forEach(el => el.classList.add('visible'));
     }
 
     function setBodyBg(index) {
-      const color = sceneNodes[index].dataset.bg || '#1a120c';
+      const node  = sceneNodes[index];
+      const color = node.dataset.bg || '#1a120c';
       document.body.style.backgroundColor = color;
+      // Toggle intro mode for color-swapping UI elements
+      document.body.classList.toggle('intro-active', node.hasAttribute('data-intro'));
     }
 
     function updateUI() {
@@ -505,7 +1253,12 @@
 
       if (index > 0 && scrollHint) scrollHint.classList.add('hidden');
 
-      setTimeout(() => reveal(sceneNodes[index]), 250);
+      setTimeout(() => {
+        reveal(sceneNodes[index]);
+        if (sceneNodes[index].classList.contains('scene-summary')) {
+          populateSummary();
+        }
+      }, 350);
       setTimeout(() => { isAnimating = false; }, SLIDE_MS);
     }
 
@@ -554,15 +1307,176 @@
       d.addEventListener('click', () => goTo(parseInt(d.dataset.index, 10)));
     });
 
-    // ─────────────────────────────
-    // Image fallback — if a photo fails to load, fall back to keyword search
-    // ─────────────────────────────
+    // Image fallback
     document.querySelectorAll('.bg-photo').forEach(img => {
       img.addEventListener('error', () => {
         const keys = img.dataset.fallback;
         if (keys) img.src = `https://source.unsplash.com/1920x1080/?${keys}`;
       });
     });
+
+    // ─────────────────────────────
+    // Memory photo loop (final scene)
+    // Each photo is loaded from Picsum (always works) — to use your own
+    // photos, save them as photos/photo1.jpg, photo2.jpg ... and the loop
+    // will swap to your local files automatically.
+    // ─────────────────────────────
+    const PHOTO_COUNT = 17;
+    const memoryStrip = document.getElementById('memory-strip');
+    if (memoryStrip) {
+      const list = [];
+      for (let i = 1; i <= PHOTO_COUNT; i++) list.push(i);
+      // Duplicate for seamless infinite loop
+      [...list, ...list].forEach((n) => {
+        const img = document.createElement('img');
+        img.className = 'memory-photo';
+        img.alt = '';
+        img.referrerPolicy = 'no-referrer';
+        // Default: Picsum (guaranteed to display)
+        const fallbackSrc = `https://picsum.photos/seed/mem${n}/600/820`;
+        img.src = fallbackSrc;
+        // If a local photo exists, switch to it once it loads
+        const localSrc = `photos/photo${n}.jpg`;
+        const tester = new Image();
+        tester.onload = () => { img.src = localSrc; };
+        tester.src = localSrc;
+        memoryStrip.appendChild(img);
+      });
+    }
+
+    // ─────────────────────────────
+    // Sliders — value display + gold fill + wheel adjust
+    // ─────────────────────────────
+    function updateSlider(slider) {
+      const row     = slider.parentElement;
+      const valueEl = row && row.querySelector('.slider-value');
+      const val     = parseInt(slider.value, 10);
+      const min     = parseInt(slider.min, 10) || 0;
+      const max     = parseInt(slider.max, 10) || 100;
+      const fillPct = ((val - min) / (max - min)) * 100;
+      if (valueEl) valueEl.textContent = val;
+      slider.style.setProperty('--fill', fillPct + '%');
+    }
+
+    document.querySelectorAll('.slider-input').forEach(slider => {
+      // Always start at 0 on page load (regardless of HTML default)
+      slider.min = '0';
+      slider.value = '0';
+      updateSlider(slider);
+      slider.addEventListener('input',  () => updateSlider(slider));
+      slider.addEventListener('change', () => updateSlider(slider));
+
+      // Wheel over slider: adjust value, don't navigate scenes
+      slider.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const min = parseInt(slider.min, 10);
+        const max = parseInt(slider.max, 10);
+        const cur = parseInt(slider.value, 10);
+        const delta = e.deltaY < 0 ? 1 : -1;
+        slider.value = Math.max(min, Math.min(max, cur + delta));
+        updateSlider(slider);
+      }, { passive: false });
+
+      // Stop touch drags from triggering scene navigation
+      ['touchstart', 'touchmove', 'touchend'].forEach(ev =>
+        slider.addEventListener(ev, (e) => e.stopPropagation(), { passive: true })
+      );
+    });
+
+    // ─────────────────────────────
+    // Summary scene: populate values + send to Gmail
+    // ─────────────────────────────
+    const DEST_NAMES = ['Paris', 'Roma', 'Kina', 'Tokyo'];
+    const RECIPIENT  = 'sebastian.froiland@gmail.com';
+
+    function collectAnswers() {
+      const out = {};
+      document.querySelectorAll('.scene.has-stats').forEach((scene, idx) => {
+        const dest = DEST_NAMES[idx] || `Scene ${idx + 1}`;
+        scene.querySelectorAll('.slider-input').forEach(slider => {
+          const labelEl = slider.parentElement.querySelector('.slider-label');
+          const label   = labelEl ? labelEl.textContent.trim() : 'Verdi';
+          out[`${dest} – ${label}`] = `${slider.value} / 10`;
+        });
+      });
+      return out;
+    }
+
+    function populateSummary() {
+      const list = document.getElementById('summary-list');
+      if (!list) return; // summary list is optional now
+      list.innerHTML = '';
+      document.querySelectorAll('.scene.has-stats').forEach((scene, idx) => {
+        const sliders = scene.querySelectorAll('.slider-input');
+        if (!sliders.length) return;
+        const destDiv = document.createElement('div');
+        destDiv.className = 'summary-dest';
+        destDiv.innerHTML = `<div class="summary-dest-name">${DEST_NAMES[idx]}</div>`;
+        sliders.forEach(slider => {
+          const labelEl = slider.parentElement.querySelector('.slider-label');
+          const label   = labelEl ? labelEl.textContent.trim() : 'Verdi';
+          const row = document.createElement('div');
+          row.className = 'summary-row';
+          row.innerHTML = `<span class="key">${label}</span><span class="val">${slider.value} / 10</span>`;
+          destDiv.appendChild(row);
+        });
+        list.appendChild(destDiv);
+      });
+    }
+
+    function buildMailtoLink(answers) {
+      const lines = [
+        'Mathildes svar fra reise-quizen:', ''
+      ];
+      const grouped = {};
+      Object.entries(answers).forEach(([key, val]) => {
+        const [dest, label] = key.split(' – ');
+        if (!grouped[dest]) grouped[dest] = [];
+        grouped[dest].push(`  • ${label}: ${val}`);
+      });
+      Object.entries(grouped).forEach(([dest, rows]) => {
+        lines.push(dest);
+        lines.push(...rows);
+        lines.push('');
+      });
+      const body = encodeURIComponent(lines.join('\n'));
+      const subj = encodeURIComponent('Mathildes reise-preferanser');
+      return `mailto:${RECIPIENT}?subject=${subj}&body=${body}`;
+    }
+
+    const sendBtn    = document.getElementById('send-btn');
+    const sendStatus = document.getElementById('send-status');
+
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const txtEl = sendBtn.querySelector('.send-btn-text');
+        const answers = collectAnswers();
+
+        // Background: try formsubmit silently (fire and forget)
+        fetch(`https://formsubmit.co/ajax/${RECIPIENT}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject: 'Mathildes reise-preferanser',
+            _captcha: 'false',
+            _template: 'box',
+            ...answers
+          })
+        }).catch(() => {});
+
+        // Primary: open user's mail client with prefilled message — always works
+        window.location.href = buildMailtoLink(answers);
+
+        // UI feedback
+        txtEl.textContent = '✓ Klar';
+        sendStatus.textContent = 'E-postklienten din åpnes — trykk Send for å fullføre. 💙';
+        sendStatus.className = 'send-status show success';
+      });
+    }
   </script>
 
 </body>
