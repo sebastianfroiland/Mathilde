@@ -434,6 +434,16 @@
       white-space: nowrap;
     }
     .alt-card .divider { margin: 0.85rem 0; }
+    .alt-sliders {
+      display: flex;
+      flex-direction: column;
+      gap: 0.62rem;
+      margin-top: 0.9rem;
+    }
+    .alt-sliders .slider-row { gap: 0.3rem; }
+    .alt-sliders .slider-label { font-size: 0.76rem; }
+    .alt-sliders .slider-value { font-size: 0.84rem; }
+    .alt-sliders .slider-input { height: 3px; }
     .alt-card .message {
       font-size: 0.88rem;
       line-height: 1.55;
@@ -1104,6 +1114,22 @@
         object-position: center 84%;
       }
 
+      .scene-alternatives .alt-sliders {
+        gap: 0.34rem;
+        margin-top: 0.42rem;
+      }
+      .scene-alternatives .alt-sliders .slider-row { gap: 0.2rem; }
+      .scene-alternatives .alt-sliders .slider-label { font-size: 0.58rem; }
+      .scene-alternatives .alt-sliders .slider-value { font-size: 0.66rem; }
+      .scene-alternatives .alt-sliders .slider-input { height: 3px; }
+      .scene-alternatives .alt-sliders .slider-input::-webkit-slider-thumb {
+        width: 13px;
+        height: 13px;
+      }
+      .scene-alternatives .alt-sliders .slider-input::-moz-range-thumb {
+        width: 13px;
+        height: 13px;
+      }
       .scene-summary {
         justify-content: flex-start;
         padding: max(5.05rem, calc(env(safe-area-inset-top) + 4.45rem)) 1rem 1rem;
@@ -1419,6 +1445,16 @@
             <h3 class="alt-name">Thailand</h3>
             <div class="glass alt-card" data-fade>
               <div class="message"><p>Eller vi kunne stukket til Thailand… varme kvelder, street food og bare oss to 🌅🍜</p></div>
+              <div class="alt-sliders">
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">Street food-fristelse</span><span class="slider-value">8</span></div>
+                  <input type="range" min="1" max="10" value="8" class="slider-input" />
+                </div>
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">Varme kvelder</span><span class="slider-value">9</span></div>
+                  <input type="range" min="1" max="10" value="9" class="slider-input" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1431,6 +1467,16 @@
             <h3 class="alt-name">Nord-Korea</h3>
             <div class="glass alt-card" data-fade>
               <div class="message"><p>Eller… noe helt uventet 👀 et sted vi aldri hadde sett for oss ✨</p></div>
+              <div class="alt-sliders">
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">Kim-fan nivå</span><span class="slider-value">1</span></div>
+                  <input type="range" min="1" max="10" value="1" class="slider-input" />
+                </div>
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">Overraskelsesfaktor</span><span class="slider-value">10</span></div>
+                  <input type="range" min="1" max="10" value="10" class="slider-input" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1443,6 +1489,16 @@
             <h3 class="alt-name">Stavanger</h3>
             <div class="glass alt-card" data-fade>
               <div class="message"><p>Eller Stavanger 😏 jeg kan gi deg VIP-tour av barndommen min 🏡✨</p></div>
+              <div class="alt-sliders">
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">Viking-fan nivå</span><span class="slider-value">7</span></div>
+                  <input type="range" min="1" max="10" value="7" class="slider-input" />
+                </div>
+                <div class="slider-row">
+                  <div class="slider-head"><span class="slider-label">VIP-tour fristelse</span><span class="slider-value">9</span></div>
+                  <input type="range" min="1" max="10" value="9" class="slider-input" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1740,6 +1796,7 @@
     // Summary scene: populate values + send to Gmail
     // ─────────────────────────────
     const DEST_NAMES = ['Paris', 'Roma', 'New York', 'Tokyo'];
+    const ALT_DEST_NAMES = ['Thailand', 'Nord-Korea', 'Stavanger'];
     const RECIPIENT  = 'sebastian.froiland@gmail.com';
 
     function collectAnswers() {
@@ -1752,6 +1809,17 @@
           out[`${dest} – ${label}`] = `${slider.value} / 10`;
         });
       });
+
+      document.querySelectorAll('.scene-alternatives .alt-section').forEach((section, idx) => {
+        const nameEl = section.querySelector('.alt-name');
+        const dest = nameEl ? nameEl.textContent.trim() : (ALT_DEST_NAMES[idx] || `Alternativ ${idx + 1}`);
+        section.querySelectorAll('.slider-input').forEach(slider => {
+          const labelEl = slider.parentElement.querySelector('.slider-label');
+          const label   = labelEl ? labelEl.textContent.trim() : 'Verdi';
+          out[`${dest} – ${label}`] = `${slider.value} / 10`;
+        });
+      });
+
       return out;
     }
 
