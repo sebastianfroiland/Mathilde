@@ -1085,9 +1085,10 @@
         top: 0.48rem;
       }
       .scene-alternatives .alt-card {
+        align-self: flex-start;
         width: min(68vw, 250px);
         min-height: 0;
-        margin: 0;
+        margin: 0 auto;
         padding: 0.5rem 0.72rem;
       }
       .scene-alternatives .alt-card .message {
@@ -1116,6 +1117,7 @@
         top: 0;
       }
       .summary-glass-final {
+        z-index: 5;
         min-height: 0;
         padding: 0.95rem 1.05rem 0.9rem;
       }
@@ -1127,6 +1129,7 @@
         margin-bottom: 0.38rem;
       }
       .summary-send-glass {
+        z-index: 6;
         padding: 0.68rem 0.82rem 0.72rem;
       }
       .summary-send-glass .message {
@@ -1144,15 +1147,18 @@
         font-size: 0.72rem;
       }
       .memory-loop {
-        top: 52vh;
-        top: 52dvh;
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        top: 50vh;
+        top: 50dvh;
         bottom: auto;
-        height: 232px;
-        z-index: 2;
+        height: 240px;
+        z-index: 4;
       }
       .memory-photo {
-        width: 156px;
-        height: 214px;
+        width: 166px;
+        height: 224px;
       }
     }
 
@@ -1168,13 +1174,13 @@
         width: min(84vw, 330px);
       }
       .memory-loop {
-        top: 51vh;
-        top: 51dvh;
-        height: 220px;
+        top: 50vh;
+        top: 50dvh;
+        height: 232px;
       }
       .memory-photo {
-        width: 148px;
-        height: 204px;
+        width: 158px;
+        height: 214px;
       }
     }
 
@@ -1196,13 +1202,13 @@
         padding: 0.58rem 0.88rem;
       }
       .memory-loop {
-        top: 55vh;
-        top: 55dvh;
-        height: 194px;
+        top: 52vh;
+        top: 52dvh;
+        height: 198px;
       }
       .memory-photo {
-        width: 136px;
-        height: 184px;
+        width: 144px;
+        height: 190px;
       }
     }
   </style>
